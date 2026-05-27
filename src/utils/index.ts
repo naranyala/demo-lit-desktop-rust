@@ -1,4 +1,5 @@
 export * from './storage';
+export * from './lit';
 
 /**
  * Removes leading indentation from a multi-line string.

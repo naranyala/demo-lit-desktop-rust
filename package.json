@@ -8,14 +8,19 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml"
+    "test:rust": "cargo test --manifest-path src-tauri/Cargo.toml",
+    "validate": "npm run typecheck && npm run test",
+    "validate:rust": "npm run typecheck && npm run test && npm run test:rust",
+    "check": "npm run validate"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.0",
     "@tauri-apps/plugin-opener": "^2.5.4",
     "@types/marked": "^6.0.0",
+    "fuse.js": "^7.3.0",
     "lit": "^3.3.3",
     "lit-html": "^3.3.3",
     "marked": "^18.0.4",

@@ -3,6 +3,7 @@ use thiserror::Error;
 
 #[derive(Debug, Error, Serialize)]
 #[serde(tag = "type", content = "message")]
+#[allow(dead_code)]
 pub enum AppError {
     #[error("Internal server error: {0}")]
     Internal(String),
@@ -20,6 +21,7 @@ pub enum AppError {
 
 pub type AppResult<T> = Result<T, AppError>;
 
+#[allow(dead_code)]
 impl AppError {
     pub fn internal(msg: impl Into<String>) -> Self {
         Self::Internal(msg.into())

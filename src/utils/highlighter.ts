@@ -22,14 +22,14 @@ class HighlighterService {
         lang,
         theme: 'github-dark',
       });
-      return `<div class="shiki-container">${html}</div>`;
+      return html;
     } catch (e) {
       console.warn(`Shiki language ${lang} not supported, falling back to plaintext.`);
       const html = this.highlighter.codeToHtml(code, {
         lang: 'plaintext',
         theme: 'github-dark',
       });
-      return `<div class="shiki-container">${html}</div>`;
+      return html;
     }
   }
 }

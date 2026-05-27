@@ -1,8 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
+import { Notifications } from "../utils/notifications";
 
-/**
- * Mirror of Rust's AppError
- */
 export type ApiErrorType = 'Internal' | 'InvalidInput' | 'NotFound' | 'Forbidden' | 'External' | 'Database';
 
 export interface ApiError {
@@ -14,21 +12,28 @@ export interface GreetRequest {
   name: string;
 }
 
-/**
- * Base API Client to handle common invoke logic, 
- * error handling, and logging.
- */
+export interface Item {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface ItemRequest {
+  name: string;
+  description: string;
+}
+
 class ApiClient {
   async call<TArgs extends Record<string, any>, TResp>(command: string, args: TArgs): Promise<TResp> {
     try {
       return await invoke<TResp>(command, args);
     } catch (error: any) {
-      // Tauri returns the serialized AppError as the error object
-      const apiError: ApiError = typeof error === 'string' 
+      const apiError: ApiError = typeof error === 'string'
         ? { type: 'Internal', message: error }
         : (error as ApiError);
-        
+
       console.error(`[API ERROR] ${command}:`, apiError);
+      Notifications.error(apiError.message);
       throw apiError;
     }
   }
@@ -42,6 +47,23 @@ export const UserApi = {
   },
 };
 
+export const DataApi = {
+  async getItems(): Promise<Item[]> {
+    return client.call<{}, Item[]>("get_items", {});
+  },
+  async createItem(item: ItemRequest): Promise<number> {
+    return client.call<ItemRequest, number>("create_item", item);
+  },
+  async updateItem(item: Item & ItemRequest): Promise<void> {
+    return client.call<Item & ItemRequest, void>("update_item", item);
+  },
+  async deleteItem(id: number): Promise<void> {
+    return client.call<{ id: number }, void>("delete_item", { id });
+  },
+};
+
 export default {
   UserApi,
+  DataApi,
 };
+
