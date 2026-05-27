@@ -17,5 +17,5 @@ export function dedent(str: string): string {
   return lines
     .map(line => line.slice(minIndent))
     .join('\n')
-    .trimStart(); // Remove leading empty lines
+    .replace(/^\n+/, '');
 }
